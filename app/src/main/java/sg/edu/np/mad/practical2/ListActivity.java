@@ -16,26 +16,35 @@ public class ListActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_list3);
+        setContentView(R.layout.activity_list);
 
-        ImageView androidImg = findViewById(R.id.androidClickable);
-        androidImg.setOnClickListener(new View.OnClickListener() {
+        ImageView img = findViewById(R.id.icon);
+
+        img.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                new AlertDialog.Builder(ListActivity.this)
-                        .setTitle("Profile")
-                        .setMessage("MAD stuff")
-                        .setPositiveButton("View", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                Intent viewProfile = new Intent(ListActivity.this, MainActivity.class);
-                                viewProfile.putExtra("id", new Random().nextInt());
-                                startActivity(viewProfile);
-                            }
-                        })
-                        .setNegativeButton("Close", null)
-                        .show();
+            public void onClick(View v) {
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(ListActivity.this);
+                alertDialogBuilder.setTitle("Profile");
+                alertDialogBuilder.setMessage("MADness");
+                alertDialogBuilder.setCancelable(true);
+                alertDialogBuilder.setPositiveButton("View", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int id) {
+                        int getid = Math.abs(new Random().nextInt());
+                        Intent listact = new Intent(ListActivity.this, MainActivity.class);
+                        listact.putExtra("id", getid);
+                        startActivity(listact);
+                    }
+                });
 
+                alertDialogBuilder.setNegativeButton("Close", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                    }
+                });
+                AlertDialog alert = alertDialogBuilder.create();
+                alertDialogBuilder.show();
             }
         });
     }

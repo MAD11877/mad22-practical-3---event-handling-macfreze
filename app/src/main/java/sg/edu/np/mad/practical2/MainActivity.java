@@ -3,60 +3,77 @@ package sg.edu.np.mad.practical2;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
-import android.view.View.OnClickListener;
-
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import org.w3c.dom.Text;
+import java.util.Set;
 
-public class MainActivity extends AppCompatActivity{
+public class MainActivity extends AppCompatActivity {
 
+    TextView userId;
+    TextView userDesc;
     User u;
+    Button followButton;
+    Button messageButton;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Intent rec = getIntent();
-        int value = rec.getIntExtra("id",0);
-        u = new User();
-        u.name = "MAD";
-        u.description = "can we talk about the economical and political state of the world right now";
-        u.id = 1;
-        u.followed = false;
+        int pos = getIntent().getIntExtra("position", 0);
 
-        TextView name =findViewById(R.id.txtName);
-        name.setText(u.name + " " + value);
-        TextView description = findViewById(R.id.txtDesc);
-        description.setText(u.description);
-        setFollowButton();
+        Intent receivingEnd = getIntent();
 
+        userId = findViewById(R.id.idTxt);
+        userDesc = findViewById(R.id.txtDesc);
+        followButton = findViewById(R.id.followButton);
+        messageButton = findViewById(R.id.messageButton);
 
-//        public void follow(View view){
-//            TextView txt = findViewById(R.id.followButton);
+        Integer getid = receivingEnd.getIntExtra("id",1);
+        String s = String.format("MAD %d", getid);
+        userId.setText(s);
 
-//        }
+        User u = SetDetails();
+        followButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view){
+                if (u.followed == false){
+                    u.followed = true;
+                    Toast.makeText(getApplicationContext(), "Followed", Toast.LENGTH_SHORT).show();
 
+                } else {
+                    u.followed = false;
+                    Toast.makeText(getApplicationContext(), "Unfollowed", Toast.LENGTH_SHORT).show();
+                }
+                follow(u, followButton);
+            }
+        });
+
+        messageButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view){
+                startActivity(new Intent(MainActivity.this, MessageGroup.class));
+            }
+        });
     }
-    private void setFollowButton() {
-        Button b = findViewById(R.id.followButton);
-        if (u.followed) {
-            b.setText("Unfollow");
-        } else {
-            b.setText("Follow");
+
+    public User SetDetails() {
+        User u = new User("MAD", "Week 2 practical", 1, false);
+        return u;
+    }
+
+    public void follow(User u, Button btn){
+        TextView txt = btn;
+        if(u.followed == false){
+            txt.setText("Follow");
+
+        }else {
+            txt.setText("Unfollow");
         }
     }
-
-    public void onClickFollow(View view){
-        u.followed = !u.followed;
-        setFollowButton();
-    }
-
-
 }
-
 
